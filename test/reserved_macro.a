@@ -1,0 +1,3 @@
+macro macro a, r
+  a, a, r
+ endm

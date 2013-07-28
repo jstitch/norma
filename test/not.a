@@ -1,0 +1,8 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+local t
+set 0, t
+NOT t, OUT
+NOT 1003, IP

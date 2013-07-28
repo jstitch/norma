@@ -1,0 +1,4 @@
+macro AUTOREF a, r
+  a, a, r
+  AUTOREF a, r
+ endm

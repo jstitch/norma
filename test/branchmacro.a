@@ -1,0 +1,29 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+macro OR a, b, r
+  local t
+  a, b, t
+  NOT t, r
+ endm
+
+macro AND a, b, r
+  local t1, t2
+  NOT a, t1
+  NOT b, t2
+  OR t1, t2, t1
+  NOT t1, r
+ endm
+
+macro JMP to
+  MOV to, IP
+ endm
+
+macro BRANCH true_dest, false_dest, cond
+  local t1, t2
+  AND true_dest, cond, t1
+  NOT cond, t2
+  AND false_dest, t2, t2
+  OR t1, t2, IP
+ endm

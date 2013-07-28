@@ -1,0 +1,15 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+macro OR a, b, r
+  local t
+  a, b, t
+  NOT t, r
+ endm
+
+macro SET a, b, r
+  local t
+  set a, t
+  a, b, r
+ endm

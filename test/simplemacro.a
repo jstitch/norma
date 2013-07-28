@@ -1,0 +1,5 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+NOT 1000, 1001

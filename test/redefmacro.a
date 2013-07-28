@@ -1,0 +1,7 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+macro NOT a, r
+  r, r, a
+ endm

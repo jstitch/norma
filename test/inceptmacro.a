@@ -1,0 +1,7 @@
+macro INCEPTION a, r
+  local t
+  macro INCEPTION a, r
+    a, a, r
+   endm
+  a, a, r
+ endm

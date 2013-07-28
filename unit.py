@@ -53,10 +53,10 @@ class TestTraduce(unittest.TestCase):
 
     def test_02_local(self):
         self.assertListEqual(norma.locales, [])
-        self.assertListEqual(norma.data, [])
+#        self.assertListEqual(norma.data, [])
         norma.traduce(['local','t1','t2'])
         self.assertListEqual(norma.locales, ['t1','t2'])
-        self.assertListEqual(norma.data, [0,0])
+#        self.assertListEqual(norma.data, [0,0])
         norma.mem[1000] = 300
         norma.traduce(['1000','t1','t2'])
         self.assertListEqual(norma.mem[0:3], [1000,norma.DATA,norma.DATA+1])
@@ -66,9 +66,9 @@ class TestTraduce(unittest.TestCase):
         norma.traduce(['set',200,1001])
         self.assertEqual(norma.mem[1001],200)
         norma.traduce(['local','var'])
-        self.assertEqual(norma.data[0],0)
+#        self.assertEqual(norma.data[0],0)
         norma.traduce(['set',200,'var'])
-        self.assertEqual(norma.data[0],200)
+#        self.assertEqual(norma.data[0],200)
         self.assertEqual(norma.mem[norma.DATA], 200)
         self.assertRaisesRegexp(Exception, "^'(\w+)' no es una variable definida$", norma.traduce, **{'codigo': ['set',200,'var2']})
         self.assertRaisesRegexp(Exception, "^La direccion '(\d+)' esta fuera de rango$", norma.traduce, **{'codigo': ['set',200,norma.TAM_MEMORIA + 1000]})

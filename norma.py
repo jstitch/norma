@@ -33,7 +33,7 @@ labels = []
 # array de macros a expandir durante load (dicts con keys 'name' (nombre de la macro), 'args' (list de nombres de args) y 'body' (list de lineas de codigo))
 macros = []
 # array con variables locales (creo que sobra)
-data = []
+# data = []
 # valor de ip conforme se traduce el programa a memoria
 ip = 0
 
@@ -43,16 +43,10 @@ ip = 0
 # - nombre de variable local (a valor en memoria de datos donde reside esa variable)
 # - nombre de label (a valor de IP apuntada por la label)
 def convierte(palabra):
-    global mem
-    
-    if palabra == "IP":
-        return IP
-    elif palabra == "SR":
-        return SR
-    elif palabra == "OUT":
-        return OUT
-    elif palabra == "DATA":
-        return DATA
+
+    if palabra in ["IP", "SR", "OUT", "DATA"]:
+        import sys
+        return sys.modules[__name__].__getattribute__(palabra)
  
     try:
         addr = int(palabra)
@@ -74,21 +68,22 @@ def convierte(palabra):
 # Traduce una linea de codigo a lineas N1, N2, N3 donde Nn son direcciones de memoria
 # - puesto que encuentra llamadas a macros, llama recursivamente a esta funcion para conseguir N1,N2,N3
 def traduce(codigo):
-    global ip, mem
+    global ip
 
     if codigo[0] == "local": # reservar memoria para variable y mapear nombre
         for local in codigo[1:] :
             locales.append(local)
-            data.append(0)
+#            data.append(0)
+
     elif codigo[0] == "set": # asignar valor a variable mapeada o direccion
         setstr = codigo[1:]
         try:
             setval = int(setstr[0])
-        except ValueError as verr:
+        except ValueError as verr: # NORMA permite usar hexadecimales en valores literales! :-D
             setval = int(setstr[0], 16)
         setdir = setstr[1] # la direccion puede ser una local ya declarada o una direccion en memoria a usar directamente
         try:
-            data[locales.index(setdir)] = setval
+#            data[locales.index(setdir)] = setval
             mem[DATA + locales.index(setdir)] = setval
         except ValueError as verr:
             try:
@@ -97,6 +92,7 @@ def traduce(codigo):
                 raise Exception("'%s' no es una variable definida" % setdir)
             except IndexError as ierr:
                 raise Exception("La direccion '%s' esta fuera de rango" % setdir)
+
     elif codigo[0] == "label": # guardar direccion de memoria en memoria de labels
         labels.append({'name':codigo[1], 'ip':ip})
 
@@ -115,7 +111,7 @@ def traduce(codigo):
             except Exception as ex:
                 raise Exception("Macro %s: %s" % (macro['name'], ex))
 
-    else: # nor
+    else: # nor (el objetivo del loader es 'aplanar' todo el codigo a estos bichos en mem)
         mem[ip] = convierte(codigo[0])
         mem[ip + 1] = convierte(codigo[1])
         mem[ip + 2] = convierte(codigo[2])
@@ -123,7 +119,6 @@ def traduce(codigo):
 
 # Carga el archivo con el programa y recorre linea a linea, cargando macros y traduciendo codigo a NORs en memoria
 def loader(nomarchivo):
-    global mem
     
     archivo = open(nomarchivo)
     lineas = archivo.readlines()
@@ -171,20 +166,17 @@ def loader(nomarchivo):
     if inmacro:
         raise Exception("No se encontro 'endm' para la macro %s" % inmacro)
 
-    # 'inicializa' el area de datos (probablemente no es necesario)
-    # for i,d in enumerate(data):
-    #     mem[DATA + i] = int(d)
 
     return mem
 
 
 # Ejecuta lo que haya en memoria como NORs de 3 en 3 direcciones
 def cpu(archivo):
-    global mem
     mem = loader(archivo)
 
     mem[IP] = 0
 
+    # Como todo se tradujo a nors, el cpu es sencillisimo
     while True:
         i = mem[IP]
         a = mem[mem[i+0]]

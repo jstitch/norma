@@ -32,8 +32,6 @@ locales = []
 labels = []
 # array de macros a expandir durante load (dicts con keys 'name' (nombre de la macro), 'args' (list de nombres de args) y 'body' (list de lineas de codigo))
 macros = []
-# array con variables locales (creo que sobra)
-# data = []
 # valor de ip conforme se traduce el programa a memoria
 ip = 0
 
@@ -73,7 +71,6 @@ def traduce(codigo):
     if codigo[0] == "local": # reservar memoria para variable y mapear nombre
         for local in codigo[1:] :
             locales.append(local)
-#            data.append(0)
 
     elif codigo[0] == "set": # asignar valor a variable mapeada o direccion
         setstr = codigo[1:]
@@ -83,7 +80,6 @@ def traduce(codigo):
             setval = int(setstr[0], 16)
         setdir = setstr[1] # la direccion puede ser una local ya declarada o una direccion en memoria a usar directamente
         try:
-#            data[locales.index(setdir)] = setval
             mem[DATA + locales.index(setdir)] = setval
         except ValueError as verr:
             try:

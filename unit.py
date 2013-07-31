@@ -150,6 +150,25 @@ class TestCpu(unittest.TestCase):
         norma.cpu("test/not.a")
         self.assertEqual(norma.mem[norma.OUT], 0xFFFF)
 
+    def test_02_mov(self):
+        norma.cpu("test/mov.a")
+        self.assertEqual(norma.mem[norma.OUT], 200)
+
+    def test_03_xor(self):
+        norma.cpu("test/xor.a")
+        self.assertEqual(norma.mem[1001], 0)
+        self.assertEqual(norma.mem[1002], 1)
+        self.assertEqual(norma.mem[1003], 1)
+        self.assertEqual(norma.mem[1004], 0)
+
+    def test_04_lshift(self):
+        norma.cpu("test/lshift.a")
+        self.assertEqual(norma.mem[1001], 2)
+        self.assertEqual(norma.mem[1002], 4)
+        self.assertEqual(norma.mem[1003], 6)
+        self.assertEqual(norma.mem[1004], 8)
+        self.assertEqual(norma.mem[1005], 10)
+        self.assertEqual(norma.mem[1006], 200)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestConvierte)

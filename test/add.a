@@ -1,0 +1,41 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+macro OR a, b, r
+  local t
+  a, b, t
+  NOT t, r
+ endm
+
+macro AND a, b, r
+  local t1, t2
+  NOT a, t1
+  NOT b, t2
+  OR t1, t2, t1
+  NOT t1, r
+ endm
+
+macro XOR a, b, r
+  local ta, tb, tc, td
+  a, a, ta
+  b, b, tb
+  ta, tb, tc
+  a, b, td
+  tc, td, r
+ endm
+
+macro MOV from, to
+  OR from, from, to
+ endm
+
+
+local A, B, C
+set 1, A
+set 2, B
+set 0, C
+
+XOR A, B, 1001
+AND A, B, 1002
+
+OR 1001, 1002, OUT

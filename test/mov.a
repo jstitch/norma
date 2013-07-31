@@ -1,0 +1,17 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+macro OR a, b, r
+  local t
+  a, b, t
+  NOT t, r
+ endm
+
+macro MOV from, to
+  OR from, from, to
+ endm
+
+set 200, 1000
+MOV 1000, OUT
+NOT 1001, IP

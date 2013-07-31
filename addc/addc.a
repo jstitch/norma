@@ -1,0 +1,89 @@
+macro NOT a, r
+  a, a, r
+ endm
+
+macro OR a, b, r
+  local t
+  a, b, t
+  NOT t, r
+ endm
+
+macro AND a, b, r
+  local t1, t2
+  NOT a, t1
+  NOT b, t2
+  OR t1, t2, t1
+  NOT t1, r
+ endm
+
+macro XOR a, b, r
+  local ta, tb, tc, td
+  a, a, ta
+  b, b, tb
+  ta, tb, tc
+  a, b, td
+  tc, td, r
+ endm
+
+macro MOV from, to
+  OR from, from, to
+ endm
+
+macro LSHIFT in, out
+  NOT in, in
+  NOT in, in
+  MOV SR, out
+ endm
+
+macro JMP to
+  MOV to, IP
+ endm
+
+macro BRANCH true_dest, false_dest, cond
+  local tA, tB
+  AND true_dest, cond, tA
+  NOT cond, tB
+  AND false_dest, tB, tB
+  OR tA, tB, IP
+ endm
+
+macro HALFADD a, b, s, c
+  XOR a, b, s
+  AND a, b, c
+ endm
+
+macro FULLADD ci, a, b, s, co
+  local tmp, c1, c2, r
+  HALFADD a, b, tmp, c1
+  HALFADD ci, tmp, s, c2
+  OR c1, c2, co
+ endm
+
+; train recorre bit a bit las entradas para aplicarles un fulladd
+local train
+set 1, train
+
+; carry que va aplicandose bit a bit entre los full adds
+local carry
+set 0, carry
+
+; resultado que va sumandose (con OR) bit a bit entre los full adds
+local res
+set 0, res
+
+;; Suma 2 + 3
+local A, B
+set 2, A
+set 3, B
+
+label main
+local a, b, rtmp
+set A, a
+set B, b
+AND a, train, a
+AND b, train, b
+FULLADD carry, a, b, rtmp, carry
+OR res, rtmp, res
+MOV res, OUT
+LSHIFT train, train
+BRANCH main, 50000, train

@@ -1,0 +1,33 @@
+macro XOR a, b, r
+  local ta, tb, tc, td
+  a, a, ta
+  b, b, tb
+  ta, tb, tc
+  a, b, td
+  tc, td, r
+ endm
+
+local A, B
+set 0, A
+set 0, B
+XOR A, B, 1001
+
+local C, D
+set 1, C
+set 0, D
+XOR C, D 1002
+
+local E, F
+set 0, E
+set 1, F
+XOR E, F, 1003
+
+local G, H
+set 1, G
+set 1, H
+XOR G, H, 1004
+
+; local I, J
+; set 0x0001, I
+; set 0x0001, J
+; XOR I, J, OUT

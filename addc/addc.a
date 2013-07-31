@@ -1,3 +1,5 @@
+;; Algoritmo de la suma sacado de http://improve.dk/adding-67-at-the-logic-gate-level/
+
 macro NOT a, r
   a, a, r
  endm
